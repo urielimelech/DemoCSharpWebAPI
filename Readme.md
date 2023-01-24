@@ -2,10 +2,9 @@
 
 This project represent a demo of a web api developed to maintain my knoledge with development
 
-
 ## ToDo
 
-[ ] - fix JWT authorization
+[V] - add JWT authorization
 
 [ ] - add some more API endpoints
 
@@ -15,8 +14,11 @@ This project represent a demo of a web api developed to maintain my knoledge wit
 
 [ ] - demo video
 
-[ ] - who know?!
+[ ] - deploy to AWS/Github Pages
 
+[ ] - security hardening - probably won't be deleted ;)
+
+[ ] - who know?!
 
 ## Contributes
 

@@ -102,5 +102,11 @@ namespace AlbarWebAPI.Controllers
                 return Unauthorized(e.Message);
             }
         }
+
+        [HttpPost("abc")]
+        public ActionResult<string> Abc()
+        {
+            return Ok();
+        }
     }
 }
