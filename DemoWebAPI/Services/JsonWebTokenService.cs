@@ -1,10 +1,11 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using DemoWebApi.Services.Interfaces;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace DemoWebApi.Services
 {
-    public class JsonWebTokenService
+    public class JsonWebTokenService : IJsonWebTokenService
     {
         private readonly IConfiguration _configuration;
         public JsonWebTokenService(IConfiguration configuration) {

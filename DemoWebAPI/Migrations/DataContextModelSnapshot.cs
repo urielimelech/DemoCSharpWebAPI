@@ -51,7 +51,6 @@ namespace DemoWebApi.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
                     b.Property<byte[]>("salt")
-                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.HasKey("id");

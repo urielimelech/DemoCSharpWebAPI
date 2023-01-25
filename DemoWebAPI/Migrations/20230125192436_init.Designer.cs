@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DemoWebApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230125144259_init")]
+    [Migration("20230125192436_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -54,7 +54,6 @@ namespace DemoWebApi.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
                     b.Property<byte[]>("salt")
-                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.HasKey("id");
