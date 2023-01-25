@@ -1,15 +1,13 @@
-﻿namespace AlbarWebAPI.Data.Objects
+﻿namespace DemoWebAPI.Data.Objects
 {
     public class User
     {
-        public byte[] Password { get; set; } = new byte[32];
-        public byte[] Salt { get; set; } = new byte[32];
+        public byte[] Password { get; set; }
         public int Id { get; set; }
         public string Email{ get; set; }
 
-        public User(string email, byte[] salt, byte[] password)
+        public User(string email, byte[] password)
         {
-            this.Salt = salt;
             this.Email = email;
             this.Password = password;
         }

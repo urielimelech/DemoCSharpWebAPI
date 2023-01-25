@@ -1,4 +1,5 @@
-﻿using AlbarWebAPI.Data.Objects;
+﻿using DemoWebAPI.Data.Objects;
+using DemoWebAPI.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -6,8 +7,9 @@ using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using DemoWebApi.Services;
 
-namespace AlbarWebAPI.Controllers
+namespace DemoWebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -22,57 +24,48 @@ namespace AlbarWebAPI.Controllers
             _configuration = configuration;
         }
 
-        private void stringToHash(string str, out byte[] salt, out byte[] hash)
-        {
-            using(var hmac = new HMACSHA256())
-            {
-                salt = hmac.Key;
-                hash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(str));
-            }
-        }
+        //private void stringToHash(string str, out byte[] salt, out byte[] hash)
+        //{
+        //    using(var hmac = new HMACSHA256())
+        //    {
+        //        salt = hmac.Key;
+        //        hash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(str));
+        //    }
+        //}
 
-        private bool verifyUserPassowrd(string str, User u) {
-            using (var hmac = new HMACSHA256(u.Salt))
-            {
-                var hash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(str));
-                return hash.SequenceEqual(u.Password);
-            }
-        }
+        //private bool verifyUserPassowrd(string str, byte[] hashedPassword ) {
+        //    using (var hmac = new HMACSHA256(u.Salt))
+        //    {
+        //        var hash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(str));
+        //        return hash.SequenceEqual(u.Password);
+        //    }
+        //}
 
-        private string CreateJWToken(User user)
+        private bool verifyUserPassowrd(string str, byte[] hashedPassword)
         {
-            List<Claim> claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, user.Email)
-            };
-            SymmetricSecurityKey key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:JWT_Token").Value));
-            SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
-            JwtSecurityToken token = new JwtSecurityToken(
-                claims: claims,
-                expires: DateTime.Now.AddMinutes(20),
-                signingCredentials: creds
-                );
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            HashingService hashingService = new HashingService(_context);
+            byte[] hash = hashingService.GetHash(str);
+            return hash.SequenceEqual(hashedPassword);
         }
 
         [HttpPost("register")]
         [AllowAnonymous]
-        public ActionResult<SigninObj> Register(SigninObj user)
+        public ActionResult<SigninObj> Register(SigninObj request)
         {
-            if(user.Password.IsNullOrEmpty() || user.Email.IsNullOrEmpty()) {
+            if(request.Password.IsNullOrEmpty() || request.Email.IsNullOrEmpty()) {
                 throw new ArgumentException("empty password or email was entered");
             }
             try
             {
-                var existUser = _context.Users.Where(u => u.Email == user.Email);
+                var existUser = _context.Users.Where(u => u.Email == request.Email);
                 if (existUser.IsNullOrEmpty())
                 {
-                    byte[] salt = new byte[32];
-                    byte[] hash = new byte[32];
-                    stringToHash(user.Password, out salt, out hash);
-                    User dtoUser = new User(user.Email, salt, hash);
+                    HashingService hashingService = new HashingService(_context);
+                    byte[] hash = hashingService.GetHash(request.Password);
+                    User dtoUser = new User(email: request.Email, password: hash);
 
                     _context.Users.Add(dtoUser);
+                    //_context.Salt.Add(new Salt(salt));
                     _context.SaveChanges();
                     return Ok();
                 }
@@ -86,14 +79,15 @@ namespace AlbarWebAPI.Controllers
 
         [HttpPost("login")]
         [AllowAnonymous]
-        public ActionResult<SigninObj> Login(SigninObj user)
+        public ActionResult<SigninObj> Login(SigninObj request)
         {
             try
             {
-                User existUser = _context.Users.Where(u=>u.Email == user.Email).First();
-                if (verifyUserPassowrd(user.Password, existUser))
+                User existUser = _context.Users.Where(u=>u.Email == request.Email).First();
+                if (verifyUserPassowrd(request.Password, existUser.Password))
                 {
-                    return Ok(CreateJWToken(existUser));
+                    JsonWebTokenService jwt = new(_configuration);
+                    return Ok(jwt.GenerateJWToken(existUser.Email));
                 }
                 throw new IOException("Invalid credetials. Please try again");
             }

@@ -1,6 +1,7 @@
-﻿using AlbarWebAPI.Data.Objects;
+﻿global using DemoWebApi.Data.Objects;
+using DemoWebAPI.Data.Objects;
 
-namespace AlbarWebAPI.Data
+namespace DemoWebAPI.Data
 {
     public class DataContext : DbContext
     {
@@ -9,5 +10,6 @@ namespace AlbarWebAPI.Data
 
         }
         public DbSet<User> Users { get; set; }
+        public DbSet<HashingSalt> HashingSalts { get; set; }
     }
 }
