@@ -1,5 +1,6 @@
 ﻿using DemoWebApi.Services.Interfaces;
 using DemoWebAPI.Data;
+using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -12,26 +13,37 @@ namespace DemoWebApi.Services
         {
             _context = context;
         }
-        public byte[] GetHash(string s)
+
+        public byte[] GenerateHash(string s)
         {
-            HashingSalt salt = GetSalt();
             using (var hmac = new HMACSHA256())
             {
-                byte[]? saltKey = salt == null ? hmac.Key : salt.salt;
-                if (salt == null)
-                {
-                    _context.HashingSalts.Add(new HashingSalt(saltKey));
-                    _context.SaveChanges();
-                }
-                hmac.Key = saltKey;
-                return hmac.ComputeHash(Encoding.UTF8.GetBytes(s));
+                byte[] saltKey = hmac.Key;
+                byte[] hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(s));
+                _context.HashingSalts.Add(new HashingSalt(saltKey));
+                _context.SaveChanges();
+                return hash;
             }
         }
-        public HashingSalt? GetSalt()
+
+        public byte[] GetHash(int id, string s)
+        {
+            HashingSalt? salt = GetSalt(id);
+            using (var hmac = new HMACSHA256())
+            {
+                if (salt != null)
+                {
+                    hmac.Key = salt.salt;
+                    return hmac.ComputeHash(Encoding.UTF8.GetBytes(s));
+                }
+                throw new InvalidDataException();
+            }
+        }
+        public HashingSalt? GetSalt(int id)
         {
             try
             {
-                return _context.HashingSalts.First();
+                return _context.HashingSalts.Where(s => s.id == id).First();
             }
             catch (Exception)
             {

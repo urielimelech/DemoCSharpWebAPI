@@ -16,7 +16,7 @@ namespace DemoWebApi.Migrations
                 {
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    salt = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
+                    salt = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
                 },
                 constraints: table =>
                 {

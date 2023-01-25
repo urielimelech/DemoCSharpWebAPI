@@ -24,27 +24,10 @@ namespace DemoWebAPI.Controllers
             _configuration = configuration;
         }
 
-        //private void stringToHash(string str, out byte[] salt, out byte[] hash)
-        //{
-        //    using(var hmac = new HMACSHA256())
-        //    {
-        //        salt = hmac.Key;
-        //        hash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(str));
-        //    }
-        //}
-
-        //private bool verifyUserPassowrd(string str, byte[] hashedPassword ) {
-        //    using (var hmac = new HMACSHA256(u.Salt))
-        //    {
-        //        var hash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(str));
-        //        return hash.SequenceEqual(u.Password);
-        //    }
-        //}
-
-        private bool verifyUserPassowrd(string str, byte[] hashedPassword)
+        private bool verifyUserPassowrd(string str,int id, byte[] hashedPassword)
         {
             HashingService hashingService = new HashingService(_context);
-            byte[] hash = hashingService.GetHash(str);
+            byte[] hash = hashingService.GetHash(id, str);
             return hash.SequenceEqual(hashedPassword);
         }
 
@@ -61,11 +44,10 @@ namespace DemoWebAPI.Controllers
                 if (existUser.IsNullOrEmpty())
                 {
                     HashingService hashingService = new HashingService(_context);
-                    byte[] hash = hashingService.GetHash(request.Password);
-                    User dtoUser = new User(email: request.Email, password: hash);
+                    byte[] hash = hashingService.GenerateHash(request.Password);
+                    User dtoUser = new User(request.Email, hash);
 
                     _context.Users.Add(dtoUser);
-                    //_context.Salt.Add(new Salt(salt));
                     _context.SaveChanges();
                     return Ok();
                 }
@@ -84,7 +66,7 @@ namespace DemoWebAPI.Controllers
             try
             {
                 User existUser = _context.Users.Where(u=>u.Email == request.Email).First();
-                if (verifyUserPassowrd(request.Password, existUser.Password))
+                if (verifyUserPassowrd(request.Password, existUser.Id, existUser.Password))
                 {
                     JsonWebTokenService jwt = new(_configuration);
                     return Ok(jwt.GenerateJWToken(existUser.Email));
