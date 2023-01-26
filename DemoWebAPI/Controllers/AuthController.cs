@@ -8,10 +8,12 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using DemoWebApi.Services;
+using Microsoft.AspNetCore.Cors;
 
 namespace DemoWebAPI.Controllers
 {
     [Route("api/[controller]")]
+    [EnableCors("EnableCORSPolicy")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -66,7 +68,8 @@ namespace DemoWebAPI.Controllers
                 if (verifyUserPassowrd(request.Password, existUser.Id, existUser.Password))
                 {
                     JsonWebTokenService jwt = new(_configuration);
-                    return Ok(jwt.GenerateJWToken(existUser.Email));
+
+                    return Ok(new { token = jwt.GenerateJWToken(existUser.Email) });
                 }
                 throw new IOException("Invalid credetials. Please try again");
             }

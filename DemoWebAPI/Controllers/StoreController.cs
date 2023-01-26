@@ -1,11 +1,13 @@
 ﻿using DemoWebAPI.Data;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace DemoWebApi.Controllers
 {
     [Route("api/[controller]")]
+    [EnableCors("EnableCORSPolicy")]
     [ApiController]
     [Authorize]
     public class StoreController : Controller
