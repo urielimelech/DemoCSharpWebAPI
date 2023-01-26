@@ -1,0 +1,15 @@
+<div>
+  <h1>Welcome to sign in page</h1>
+  <form [formGroup]="signInForm" *ngIf="signInForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="email">Email</label>
+      <input id="email" type="text" formControlName="email">
+    </div>
+    <div>
+      <label for="password">Password</label>
+      <input id="password" type="text" formControlName="password">
+    </div>
+    <button class="button" type="login" [disabled]="!signInForm.valid" (click)="onLogin()">Login</button>
+    <button class="button" type="register" [disabled]="!signInForm.valid" (click)="onRegister()">Register</button>
+  </form>
+</div>

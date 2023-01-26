@@ -17,6 +17,14 @@ namespace DemoWebApi
             _builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             _builder.Services.AddEndpointsApiExplorer();
+            _builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(name: "AllowPolicy",
+                    policy =>
+                    {
+                        policy.WithOrigins("https://localhost:4200/");
+                    });
+            });
             _builder.Services.AddSwaggerGen(options =>
             {
                 options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
@@ -62,6 +70,8 @@ namespace DemoWebApi
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseCors("AllowPolicy");
 
             app.UseHttpsRedirection();
 
