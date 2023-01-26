@@ -25,6 +25,12 @@ namespace DemoWebApi.Controllers
             return Ok(_context.ItemsStore.ToList());
         }
 
+        [HttpPost("GetItemsName")]
+        public ActionResult<List<Item>> GetItemsName(string name)
+        {
+            return Ok(_context.ItemsStore.Where(item=>item.Name.StartsWith(name)).ToList());
+        }
+
         [HttpPost("CreateItem")]
         public ActionResult<ItemObj> CreateItem(ItemObj item)
         {

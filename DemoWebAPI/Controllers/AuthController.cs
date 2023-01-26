@@ -13,7 +13,6 @@ namespace DemoWebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class AuthController : ControllerBase
     {
         private readonly DataContext _context;
@@ -32,7 +31,6 @@ namespace DemoWebAPI.Controllers
         }
 
         [HttpPost("register")]
-        [AllowAnonymous]
         public ActionResult<SigninObj> Register(SigninObj request)
         {
             if(request.Password.IsNullOrEmpty() || request.Email.IsNullOrEmpty()) {
@@ -60,7 +58,6 @@ namespace DemoWebAPI.Controllers
         }
 
         [HttpPost("login")]
-        [AllowAnonymous]
         public ActionResult<SigninObj> Login(SigninObj request)
         {
             try
