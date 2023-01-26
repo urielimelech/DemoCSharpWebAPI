@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { HomeComponent } from './home/home.component';
 import { SigninComponent } from './signin/signin.component';
+import { RequestConfigService } from './services/requestConfig/request-config.service';
 
 @NgModule({
   declarations: [
@@ -23,9 +24,11 @@ import { SigninComponent } from './signin/signin.component';
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'signin', component: SigninComponent },
-  ])
+  ]),
 ],
-  providers: [],
+  providers: [
+    RequestConfigService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
