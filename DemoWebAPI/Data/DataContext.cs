@@ -11,5 +11,6 @@ namespace DemoWebAPI.Data
         }
         public DbSet<User> Users { get; set; }
         public DbSet<HashingSalt> HashingSalts { get; set; }
+        public DbSet<Item> ItemsStore { get; set; }
     }
 }

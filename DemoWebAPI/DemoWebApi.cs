@@ -28,6 +28,7 @@ namespace DemoWebApi
                 });
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
             });
+            _builder.Services.AddHttpContextAccessor();
 
             // JWT authenticator
             _builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

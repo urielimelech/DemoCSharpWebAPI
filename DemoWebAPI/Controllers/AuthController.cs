@@ -75,7 +75,7 @@ namespace DemoWebAPI.Controllers
             }
             catch (Exception e)
             {
-                return Unauthorized(e.Message);
+                return Unauthorized($"User is not exist, {e.Message}");
             }
         }
 
