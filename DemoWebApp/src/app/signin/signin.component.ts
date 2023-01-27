@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
-import { IStockItem } from '../interfaces/IStockItem';
-import { RequestConfigService } from '../services/requestConfig/request-config.service';
+import { FormControl, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
+import { IUserCredentials } from '../interfaces/IUserCredentials';
+import { AuthenticationModule } from '../Modules/authentication/authentication.module';
 
 @Component({
   selector: 'app-signin',
@@ -10,41 +11,32 @@ import { RequestConfigService } from '../services/requestConfig/request-config.s
 })
 export class SigninComponent {
 
-  registeredUser = false
-
   signInForm = new FormGroup({
     email: new FormControl(''),
-    password:new FormControl('')
+    password: new FormControl('')
   })
 
-  constructor(private requestService: RequestConfigService){}
+  constructor(private router: Router, private authentication: AuthenticationModule) { }
 
-  onLogin(){
-    this.registeredUser = true
-  }
-  login(){
+  onLogin() {
     const values = this.signInForm.value
-    if (values.email && values.password)
-      this.requestService.login(values.email, values.password)
+    if (values.email && values.password) {
+      const userCredentials: IUserCredentials = { email: values.email, password: values.password }
+      this.authentication.login(userCredentials)
+      this.router.navigateByUrl('/store')
+    }
   }
 
-  onRegister(){
-    this.registeredUser = false
-  }
-  register(){
+  onRegister() {
+    console.log("register")
     const values = this.signInForm.value
-    if (values.email && values.password)
-      this.requestService.register(values.email, values.password)
+    if (values.email && values.password) {
+      const userCredentials: IUserCredentials = { email: values.email, password: values.password }
+      this.authentication.register(userCredentials)
+    }
   }
 
   onSubmit() {
-    this.registeredUser ? this.login() : this.register()
+    console.log("onSubmit")
   }
-
-  /** testing JWT */
-  getItems(){
-    const items = this.requestService.getAllItems().subscribe((v: IStockItem[]) => console.log(v))
-  }
-
-
 }
