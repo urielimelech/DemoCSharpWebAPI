@@ -1,0 +1,7 @@
+.main{
+  display: flex;
+}
+.wrapper {
+  display: flex;
+  padding: 1000px;
+}

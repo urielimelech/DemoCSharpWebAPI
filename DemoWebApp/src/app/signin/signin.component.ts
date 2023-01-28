@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
+import { IUserCredentials } from '../interfaces/IUserCredentials';
+import { AuthenticationModule } from '../Modules/authentication/authentication.module';
 
 @Component({
   selector: 'app-signin',
@@ -8,34 +11,34 @@ import { FormGroup, FormControl } from '@angular/forms';
 })
 export class SigninComponent {
 
-  registeredUser = false
-
   signInForm = new FormGroup({
     email: new FormControl(''),
-    password:new FormControl('')
+    password: new FormControl('')
   })
 
-  constructor(
-  ){}
+  constructor(private router: Router, private authentication: AuthenticationModule) { }
 
-  onLogin(){
-    this.registeredUser = true
-  }
-  login(){
-    console.log(this.signInForm.value)
-    console.log("login")
+  onLogin() {
+    const values = this.signInForm.value
+    if (values.email && values.password) {
+      const userCredentials: IUserCredentials = { email: values.email, password: values.password }
+      this.authentication.login(userCredentials)
+      setTimeout(()=> {
+        this.router.navigateByUrl('/store')
+      },20)
+    }
   }
 
-  onRegister(){
-    this.registeredUser = false
-  }
-  register(){
-    console.log(this.signInForm.value)
+  onRegister() {
     console.log("register")
+    const values = this.signInForm.value
+    if (values.email && values.password) {
+      const userCredentials: IUserCredentials = { email: values.email, password: values.password }
+      this.authentication.register(userCredentials)
+    }
   }
 
   onSubmit() {
-    this.registeredUser ? this.login() : this.register()
+    console.log("onSubmit")
   }
-
 }

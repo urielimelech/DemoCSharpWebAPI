@@ -19,10 +19,10 @@ namespace DemoWebApi
             _builder.Services.AddEndpointsApiExplorer();
             _builder.Services.AddCors(options =>
             {
-                options.AddPolicy(name: "AllowPolicy",
+                options.AddPolicy(name: "EnableCORSPolicy",
                     policy =>
                     {
-                        policy.WithOrigins("https://localhost:4200/");
+                        policy.WithOrigins("https://localhost:4200").AllowAnyHeader().WithMethods("POST");
                     });
             });
             _builder.Services.AddSwaggerGen(options =>
@@ -71,7 +71,7 @@ namespace DemoWebApi
                 app.UseSwaggerUI();
             }
 
-            app.UseCors("AllowPolicy");
+            app.UseCors("EnableCORSPolicy");
 
             app.UseHttpsRedirection();
 
