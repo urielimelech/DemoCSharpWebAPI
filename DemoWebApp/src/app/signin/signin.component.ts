@@ -23,7 +23,9 @@ export class SigninComponent {
     if (values.email && values.password) {
       const userCredentials: IUserCredentials = { email: values.email, password: values.password }
       this.authentication.login(userCredentials)
-      this.router.navigateByUrl('/store')
+      setTimeout(()=> {
+        this.router.navigateByUrl('/store')
+      },20)
     }
   }
 

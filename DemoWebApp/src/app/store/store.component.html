@@ -1,4 +1,83 @@
-<div>
-  <p>store works!</p>
-  <button class="button" type="getItems" (click)="getItems()">GetItems</button>
+<div class="wrapper">
+  <div class="buttons-container">
+
+    <form [formGroup]="addItemForm" *ngIf="addItemForm" (ngSubmit)="addItem()">
+      <label for="itemName">name</label>
+      <input id="itemName" type="text" formControlName="itemName">
+      <label for="itemDescription">description</label>
+      <input id="itemDescription" type="text" formControlName="itemDescription">
+      <label for="itemCount">count</label>
+      <input id="itemCount" type="text" formControlName="itemCount">
+      <label for="itemPrice">price</label>
+      <input id="itemPrice" type="text" formControlName="itemPrice">
+      <button class="button" type="addItem" (click)="addItem">Add New Item</button>
+    </form>
+
+    <form [formGroup]="updateItemForm" *ngIf="updateItemForm" (ngSubmit)="updateItem()">
+      <label for="itemId">id</label>
+      <input id="itemId" type="text" formControlName="itemId">
+      <label for="itemName">name</label>
+      <input id="itemName" type="text" formControlName="itemName">
+      <label for="itemDescription">description</label>
+      <input id="itemDescription" type="text" formControlName="itemDescription">
+      <label for="itemCount">count</label>
+      <input id="itemCount" type="text" formControlName="itemCount">
+      <label for="itemPrice">price</label>
+      <input id="itemPrice" type="text" formControlName="itemPrice">
+      <button class="button" type="updateItem" (click)="updateItem">Update Item</button>
+    </form>
+
+    <form [formGroup]="searchItemForm" *ngIf="searchItemForm" (ngSubmit)="searchItem()">
+      <label for="searchItem">search</label>
+      <input id="searchItem" type="text" formControlName="searchItem">
+      <button class="button" type="searchItem" (click)="searchItem">Search Item</button>
+    </form>
+
+  </div>
+
+
+  <div class="item-container">
+
+    <div class="stored-item table-title">
+      <div class="text-container">
+        <span>id</span>
+      </div>
+      <div class="text-container">
+        <span>name</span>
+      </div>
+      <div class="text-container">
+        <span>description</span>
+      </div>
+      <div class="text-container">
+        <span>in stock</span>
+      </div>
+      <div class="text-container">
+        <span>price</span>
+      </div>
+      <div class="text-container">
+        <span>createdBy</span>
+      </div>
+    </div>
+
+    <div class="stored-item" *ngFor="let item of itemsList">
+      <div class="text-container">
+        <span>{{item.id}}</span>
+      </div>
+      <div class="text-container">
+        <span>{{item.name}}</span>
+      </div>
+      <div class="text-container">
+        <span>{{item.description}}</span>
+      </div>
+      <div class="text-container">
+        <span>{{item.count}}</span>
+      </div>
+      <div class="text-container">
+        <span>{{item.price}}</span>
+      </div>
+      <div class="text-container">
+        <span>{{item.createdBy}}</span>
+      </div>
+    </div>
+  </div>
 </div>

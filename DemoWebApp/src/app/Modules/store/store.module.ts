@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IStockItem } from 'src/app/interfaces/IStockItem';
 import { RequestConfigService } from 'src/app/services/requestConfig/request-config.service';
+import { Observable } from 'rxjs';
 
 @NgModule({
   declarations: [],
@@ -15,9 +16,18 @@ export class StoreModule {
     this.endpoint = '/Store'
   }
 
-  getAllItems() {
-    this._requestConfigService.postRequest(`${this.endpoint}/getItems`, null).subscribe((response: IStockItem[]) => {
-      console.log(response)
-    })
+  getAllItems(): Observable<IStockItem[]> {
+    console.log(this._requestConfigService.header)
+    return this._requestConfigService.postRequest(`${this.endpoint}/GetItems`, null)
+  }
+  addNewItem(item: IStockItem): Observable<IStockItem> {
+    return this._requestConfigService.postRequest(`${this.endpoint}/CreateItem`, item)
+  }
+  searchItem(name: string): Observable<IStockItem[]> {
+    console.log(name)
+    return this._requestConfigService.postRequest(`${this.endpoint}/SearchItemByName`, { name })
+  }
+  updateItem(item: IStockItem): Observable<IStockItem> {
+    return this._requestConfigService.postRequest(`${this.endpoint}/UpdateItem`, item)
   }
 }

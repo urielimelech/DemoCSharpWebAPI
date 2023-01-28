@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 
 namespace DemoWebApi.Controllers
@@ -27,10 +28,14 @@ namespace DemoWebApi.Controllers
             return Ok(_context.ItemsStore.ToList());
         }
 
-        [HttpPost("GetItemsName")]
-        public ActionResult<List<Item>> GetItemsName(string name)
+        [HttpPost("SearchItemByName")]
+        public ActionResult<List<Item>> SearchItemByName(ItemName request)
         {
-            return Ok(_context.ItemsStore.Where(item=>item.Name.StartsWith(name)).ToList());
+            if (!request.Name.IsNullOrEmpty())
+            {
+                return Ok(_context.ItemsStore.Where(item => item.Name.StartsWith(request.Name)).ToList());
+            }
+            return BadRequest("search parameter is not valid");
         }
 
         [HttpPost("CreateItem")]
@@ -40,7 +45,7 @@ namespace DemoWebApi.Controllers
             Item i = new Item(item.Name, item.Description, item.Price, item.Count, userName);
             _context.ItemsStore.Add(i);
             _context.SaveChanges();
-            return Ok(item);
+            return Ok(i);
         }
 
         [HttpPost("UpdateItem")]
@@ -62,14 +67,6 @@ namespace DemoWebApi.Controllers
             {
                 return NotFound(e.Message);
             }
-        }
-
-        [HttpPost("AddToCart")]
-        public ActionResult<Item> AddToCart(int id)
-        {
-            Item item = _context.ItemsStore.Where(i => i.Id == id).First();
-            /* add cart store */
-            return Ok(item);
         }
     }
 }
