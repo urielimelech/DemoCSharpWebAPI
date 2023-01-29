@@ -1,7 +1,7 @@
 <div class="wrapper">
   <div class="buttons-container">
 
-    <form [formGroup]="addItemForm" *ngIf="addItemForm" (ngSubmit)="addItem()">
+    <form class="form" [formGroup]="addItemForm" *ngIf="addItemForm" (ngSubmit)="addItem()">
       <label for="itemName">name</label>
       <input id="itemName" type="text" formControlName="itemName">
       <label for="itemDescription">description</label>
@@ -13,7 +13,7 @@
       <button class="button" type="addItem" (click)="addItem">Add New Item</button>
     </form>
 
-    <form [formGroup]="updateItemForm" *ngIf="updateItemForm" (ngSubmit)="updateItem()">
+    <form class="form" [formGroup]="updateItemForm" *ngIf="updateItemForm" (ngSubmit)="updateItem()">
       <label for="itemId">id</label>
       <input id="itemId" type="text" formControlName="itemId">
       <label for="itemName">name</label>
@@ -27,7 +27,7 @@
       <button class="button" type="updateItem" (click)="updateItem">Update Item</button>
     </form>
 
-    <form [formGroup]="searchItemForm" *ngIf="searchItemForm" (ngSubmit)="searchItem()">
+    <form class="form" [formGroup]="searchItemForm" *ngIf="searchItemForm" (ngSubmit)="searchItem()">
       <label for="searchItem">search</label>
       <input id="searchItem" type="text" formControlName="searchItem">
       <button class="button" type="searchItem" (click)="searchItem">Search Item</button>

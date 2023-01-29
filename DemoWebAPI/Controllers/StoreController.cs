@@ -23,7 +23,7 @@ namespace DemoWebApi.Controllers
         }
 
         [HttpPost("GetItems")]
-        public ActionResult<List<Item>> GetItemes()
+        public ActionResult<List<Item>> GetItems()
         {
             return Ok(_context.ItemsStore.ToList());
         }

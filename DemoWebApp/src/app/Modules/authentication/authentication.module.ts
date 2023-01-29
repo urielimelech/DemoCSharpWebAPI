@@ -21,9 +21,6 @@ export class AuthenticationModule {
   login(credentials: IUserCredentials) {
     this._requestConfigService.postRequest(`${this.endpoint}/login`, credentials).subscribe((response: IToken) => {
       this._requestConfigService.setAuthorizationHeader(response.token)
-      // localStorage.setItem("jwt", response.token)
-      // let e: EventEmitter<any> = new EventEmitter()
-      // e.emit()
     })
   }
 
