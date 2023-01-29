@@ -25,7 +25,7 @@ export class SigninComponent {
       this.authentication.login(userCredentials)
       setTimeout(()=> {
         this.router.navigateByUrl('/store')
-      },20)
+      },500)
     }
   }
 
